@@ -17,7 +17,7 @@ class BladeSvgServiceProvider extends ServiceProvider
 		if ($this->app->runningInConsole()) {
 			$this->publishes([
 				__DIR__ . '/../config/config.php' => config_path('blade-svg.php'),
-			], 'config');
+			], 'blade-svg');
 		}
 
 		$this->loadViewComponentsAs('blade', [
