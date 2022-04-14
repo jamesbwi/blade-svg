@@ -2,8 +2,12 @@
     "name": "jamesbwi/blade-svg",
     "description": "Embed SVGs in Laravel Blade.",
     "keywords": [
-        "jamesbwi",
-        "blade-svg"
+        "blade-svg",
+        "laravel",
+        "blade",
+        "svg",
+        "blade component",
+        "svg component"
     ],
     "homepage": "https://github.com/jamesbwi/blade-svg",
     "license": "MIT",
@@ -40,5 +44,12 @@
     },
     "config": {
         "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Jamesbwi\\BladeSvg\\BladeSvgServiceProvider"
+            ]
+        }
     }
 }
