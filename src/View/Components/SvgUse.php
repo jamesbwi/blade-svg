@@ -9,6 +9,9 @@ use function view;
 class SvgUse extends Component
 {
 
+	/**
+	 * @var string|null the id of the svg being used
+	 */
 	public $id;
 
 	/**
@@ -22,6 +25,14 @@ class SvgUse extends Component
 		$this->id = $id;
 	}
 
+	/**
+	 * Generates substring between a start point and end point
+	 *
+	 * @param $string
+	 * @param $start
+	 * @param $end
+	 * @return string
+	 */
 	function stripString($string, $start, $end) {
 		$stripped = substr($string, strpos($string, $start));
 
@@ -29,7 +40,7 @@ class SvgUse extends Component
 	}
 
 	/**
-	 * Get the view / contents that represent the component.
+	 * Return the svg with the specified attributes
 	 *
 	 * @return \Illuminate\Contracts\View\View|\Closure|string
 	 */

@@ -6,5 +6,5 @@
 return [
 
 
-	'cache_duration' => env('SVG_DURATION','60'),
+	'cache_duration' => env('BLADE_SVG_CACHE_DURATION','365'),
 ];

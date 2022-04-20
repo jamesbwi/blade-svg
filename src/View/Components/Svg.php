@@ -9,12 +9,13 @@ use Illuminate\View\Component;
 class Svg extends Component
 {
 	/**
-	 * @var string|false
+	 * @var string|false the svg file contents
+	 *
 	 */
 	public $svg;
 
 	/**
-	 * @var string
+	 * @var string The file path of the svg
 	 */
 	public $path;
 
@@ -41,6 +42,8 @@ class Svg extends Component
 	}
 
 	/**
+	 * Generates substring between a start point and end point
+	 *
 	 * @param $string
 	 * @param $start
 	 * @param $end
@@ -53,6 +56,8 @@ class Svg extends Component
 	}
 
 	/**
+	 * Generates a unique key for the svg to be used for caching
+	 *
 	 * @param array $attributes
 	 * @return string
 	 */
@@ -68,7 +73,7 @@ class Svg extends Component
 	}
 
 	/**
-	 * Get the view / contents that represent the component.
+	 * Return the svg with the specified attributes
 	 *
 	 * @return \Illuminate\Contracts\View\View|\Closure|string
 	 */
@@ -77,7 +82,7 @@ class Svg extends Component
 		return function (array $data) {
 			$cacheKey = $this->getCacheKey($data['attributes']->getAttributes());
 
-			return Cache::remember($cacheKey, $seconds = config('config.cache_duration'), function() use ($data) {
+			return Cache::remember($cacheKey, $days = config('config.cache_duration'), function() use ($data) {
 				$doc = new \DOMDocument();
 				$doc->loadXML($this->svg);
 
