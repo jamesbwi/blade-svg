@@ -3,7 +3,7 @@
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/jamesbwi/blade-svg.svg?style=flat-square)](https://packagist.org/packages/jamesbwi/blade-svg)
 [![Total Downloads](https://img.shields.io/packagist/dt/jamesbwi/blade-svg.svg?style=flat-square)](https://packagist.org/packages/jamesbwi/blade-svg)
 
-This is where your description should go. Try and limit it to a paragraph or two, and maybe throw in a mention of what PSRs you support to avoid any confusion with users and contributors.
+This package allows for easy use and manipulation of svg files within your laravel project.
 
 ## Installation
 
@@ -15,15 +15,40 @@ composer require jamesbwi/blade-svg
 
 ## Usage
 
-```php
-// Usage description here
+To insert an SVG file, simply use the following component:
+```html
+<blade-svg src="/img/apple.svg"/>
+```
+You can pass any attribute into the component as if it were an inline svg:
+```html
+<blade-svg src="/img/apple.svg" class="apple-animation" viewBox="0 0 50 100"/>
+```
+###&lt;use&gt; tags
+If you wish to utilise the SVG &lt;use&gt; tags this package simplifies the process.
+The following component will embed the SVG into an &lt;element&gt; tag with the specified attributes:
+
+```html
+<blade-svg-def id="apple" src="/img/apple.svg" viewBox="0 0 50 100"/>
 ```
 
-### Testing
+The element (or any other SVG with an id set) can then be implemented with the following tag:
 
-```bash
-composer test
+```html
+<blade-svg-use href="#apple"/>
 ```
+
+You can add any attribute to the &lt;use&gt; tag:
+
+```html
+<blade-svg-use href="#apple" class="apple-animation" width="500px" preserveAspectRatio="none"/>
+```
+
+External sources can be referenced too:
+
+```html
+<blade-svg-use href="fruit-bowl.svg#pear"/>
+```
+
 
 ### Changelog
 

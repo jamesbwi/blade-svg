@@ -6,42 +6,35 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Illuminate\View\Component;
 
-use function view;
-
 class SvgDef extends Component
 {
 	/**
-	 * @var string|false
+	 * @var string|false The svg file contents
+	 *
 	 */
 	public $svg;
 
 	/**
-	 * @var string
+	 * @var string The file path of the svg
 	 */
 	public $path;
-
-	/**
-	 * @var string
-	 */
-	public $id;
 
 	/**
 	 * Create a new component instance.
 	 *
 	 * @param string $src
-	 * @param string $id
 	 *
 	 */
-	public function __construct(string $src, string $id)
+	public function __construct(string $src)
 	{
 		$this->path = $src;
 
 		$this->svg = file_get_contents($src);
-
-		$this->id = $id;
 	}
 
 	/**
+	 * Generates substring between a start point and end point
+	 *
 	 * @param $string
 	 * @param $start
 	 * @param $end
@@ -54,6 +47,8 @@ class SvgDef extends Component
 	}
 
 	/**
+	 * Generates a unique key for the svg to be used for caching
+	 *
 	 * @param array $attributes
 	 * @return string
 	 */
@@ -61,6 +56,7 @@ class SvgDef extends Component
 		ksort($attributes);
 
 		$cacheKey = 'svg-def-' . $this->path;
+
 		foreach ($attributes as $key => $value) {
 			$cacheKey .= '#' . $key . '=' . Str::slug($value, '-');
 		}
@@ -69,7 +65,7 @@ class SvgDef extends Component
 	}
 
 	/**
-	 * Get the view / contents that represent the component.
+	 * Return the svg element with the specified attributes
 	 *
 	 * @return \Illuminate\Contracts\View\View|\Closure|string
 	 */
@@ -78,7 +74,7 @@ class SvgDef extends Component
 		return function (array $data) {
 			$cacheKey = $this->getCacheKey($data['attributes']->getAttributes());
 
-			return Cache::remember($cacheKey, $minutes = config('config.cache_duration'), function() use ($data) {
+			return Cache::remember($cacheKey, $days = config('config.cache_duration'), function() use ($data) {
 				$doc = new \DOMDocument();
 				$doc->loadXML($this->svg);
 
@@ -99,8 +95,6 @@ class SvgDef extends Component
 				foreach ($data['attributes'] as $key => $value) {
 					$symbol->setAttribute($key, $value);
 				}
-
-				$symbol->setAttribute('id', $this->id);
 
 				foreach ($element->childNodes as $node) {
 					if ($node->nodeType === 1) {
