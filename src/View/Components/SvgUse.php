@@ -12,17 +12,17 @@ class SvgUse extends Component
 	/**
 	 * @var string|null the id of the svg being used
 	 */
-	public $id;
+	public $href;
 
 	/**
 	 * Create a new component instance.
 	 *
-	 * @param string|null $id
+	 * @param string|null $href
 	 *
 	 */
-	public function __construct(string $id = null)
+	public function __construct(string $href = null)
 	{
-		$this->id = $id;
+		$this->href = str_contains($href, '#') ? $href : '#' . $href;
 	}
 
 	/**
@@ -52,7 +52,7 @@ class SvgUse extends Component
 
 			$element = $doc->createElement('use');
 
-			$element->setAttribute('href', '#' . $this->id);
+			$element->setAttribute('href', $this->href);
 
 			foreach($data['attributes'] as $key => $value) {
 				$svgElement->setAttribute($key, $value);

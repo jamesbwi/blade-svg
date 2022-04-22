@@ -20,24 +20,16 @@ class SvgDef extends Component
 	public $path;
 
 	/**
-	 * @var string|null
-	 */
-	public $id;
-
-	/**
 	 * Create a new component instance.
 	 *
 	 * @param string $src
-	 * @param string $id
 	 *
 	 */
-	public function __construct(string $src, string $id)
+	public function __construct(string $src)
 	{
 		$this->path = $src;
 
 		$this->svg = file_get_contents($src);
-
-		$this->id = $id;
 	}
 
 	/**
@@ -64,6 +56,7 @@ class SvgDef extends Component
 		ksort($attributes);
 
 		$cacheKey = 'svg-def-' . $this->path;
+
 		foreach ($attributes as $key => $value) {
 			$cacheKey .= '#' . $key . '=' . Str::slug($value, '-');
 		}
@@ -102,8 +95,6 @@ class SvgDef extends Component
 				foreach ($data['attributes'] as $key => $value) {
 					$symbol->setAttribute($key, $value);
 				}
-
-				$symbol->setAttribute('id', $this->id);
 
 				foreach ($element->childNodes as $node) {
 					if ($node->nodeType === 1) {

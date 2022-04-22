@@ -20,25 +20,16 @@ class Svg extends Component
 	public $path;
 
 	/**
-	 * @var string|null
-	 */
-	public $id;
-
-
-	/**
 	 * Create a new component instance.
 	 *
 	 * @param string $src
-	 * @param string|null $id
 	 *
 	 */
-	public function __construct(string $src, string $id = null)
+	public function __construct(string $src)
 	{
 		$this->path = $src;
 
 		$this->svg = file_get_contents($src);
-
-		$this->id = $id;
 	}
 
 	/**
@@ -65,6 +56,7 @@ class Svg extends Component
 		ksort($attributes);
 
 		$cacheKey = $this->path;
+
 		foreach ($attributes as $key => $value) {
 			$cacheKey .= '#' . $key . '=' . Str::slug($value, '-');
 		}
@@ -87,10 +79,6 @@ class Svg extends Component
 				$doc->loadXML($this->svg);
 
 				$element = $doc->getElementsByTagName('svg')->item(0);
-
-				if($this->id) {
-					$element->setAttribute('id', $this->id);
-				}
 
 				foreach($data['attributes'] as $key => $value) {
 					$element->setAttribute($key, $value);
