@@ -23,15 +23,16 @@ You can pass any attribute into the component as if it were an inline svg:
 ```html
 <blade-svg src="/img/apple.svg" class="apple-animation" viewBox="0 0 50 100"/>
 ```
-###&lt;use&gt; tags
-If you wish to utilise the SVG &lt;use&gt; tags this package simplifies the process.
+
+### &lt;use&gt; tags
+If you wish to utilise the SVG &lt;use&gt; tags this package simplifies the process. <br>
 The following component will embed the SVG into an &lt;element&gt; tag with the specified attributes:
 
 ```html
 <blade-svg-def id="apple" src="/img/apple.svg" viewBox="0 0 50 100"/>
 ```
 
-The element (or any other SVG with an id set) can then be implemented with the following tag:
+The element (or any other SVG with an id) can then be referenced with the following tag:
 
 ```html
 <blade-svg-use href="#apple"/>
