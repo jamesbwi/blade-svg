@@ -33,20 +33,6 @@ class Svg extends Component
 	}
 
 	/**
-	 * Generates substring between a start point and end point
-	 *
-	 * @param $string
-	 * @param $start
-	 * @param $end
-	 * @return string
-	 */
-	protected function stripString($string, $start, $end) {
-		$stripped = substr($string, strpos($string, $start));
-
-		return substr($stripped, 0, strpos($stripped, $end));
-	}
-
-	/**
 	 * Generates a unique key for the svg to be used for caching
 	 *
 	 * @param array $attributes
@@ -84,7 +70,7 @@ class Svg extends Component
 					$element->setAttribute($key, $value);
 				}
 
-				return $this->stripString($doc->saveHTML(), '<svg', '</svg>') . '</svg>';
+				return $doc->saveHTML($element);
 			});
 		};
 	}

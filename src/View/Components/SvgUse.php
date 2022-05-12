@@ -20,23 +20,9 @@ class SvgUse extends Component
 	 * @param string|null $href
 	 *
 	 */
-	public function __construct(string $href = null)
+	public function __construct(string $href)
 	{
 		$this->href = str_contains($href, '#') ? $href : '#' . $href;
-	}
-
-	/**
-	 * Generates substring between a start point and end point
-	 *
-	 * @param $string
-	 * @param $start
-	 * @param $end
-	 * @return string
-	 */
-	function stripString($string, $start, $end) {
-		$stripped = substr($string, strpos($string, $start));
-
-		return substr($stripped, 0, strpos($stripped, $end));
 	}
 
 	/**
@@ -61,7 +47,7 @@ class SvgUse extends Component
 			$svgElement->appendChild($element);
 			$doc->appendChild($svgElement);
 
-			return $this->stripString($doc->saveXML(), '<svg', '</svg>') . '</svg>';
+			return $doc->saveXML($svgElement);
 		};
 	}
 }
