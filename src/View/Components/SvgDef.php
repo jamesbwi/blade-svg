@@ -15,11 +15,6 @@ class SvgDef extends Component
 	public $svg;
 
 	/**
-	 * @var string The file path of the svg
-	 */
-	public $path;
-
-	/**
 	 * Create a new component instance.
 	 *
 	 * @param string $src
@@ -27,27 +22,7 @@ class SvgDef extends Component
 	 */
 	public function __construct(string $src)
 	{
-		$this->path = $src;
-
 		$this->svg = file_get_contents($src);
-	}
-
-	/**
-	 * Generates a unique key for the svg to be used for caching
-	 *
-	 * @param array $attributes
-	 * @return string
-	 */
-	protected function getCacheKey(array $attributes) {
-		ksort($attributes);
-
-		$cacheKey = 'svg-def-' . $this->path;
-
-		foreach ($attributes as $key => $value) {
-			$cacheKey .= '#' . $key . '=' . Str::slug($value, '-');
-		}
-
-		return $cacheKey;
 	}
 
 	/**
@@ -58,43 +33,39 @@ class SvgDef extends Component
 	public function render()
 	{
 		return function (array $data) {
-			$cacheKey = $this->getCacheKey($data['attributes']->getAttributes());
+			$doc = new \DOMDocument();
+			$doc->loadXML($this->svg);
 
-			return Cache::remember($cacheKey, config('config.cache_duration'), function() use ($data) {
-				$doc = new \DOMDocument();
-				$doc->loadXML($this->svg);
+			$oldSvgElement = $doc->getElementsByTagName('svg')->item(0);
 
-				$oldSvgElement = $doc->getElementsByTagName('svg')->item(0);
+			//create new svg with just a <symbol> tag
+			$newSvgElement = $doc->createElement('svg');
+			$newSvgElement->setAttribute('style', 'display: none');
+			$symbol = $doc->createElement('symbol');
+			$newSvgElement->appendChild($symbol);
 
-				//create new svg with just a <symbol> tag
-				$newSvgElement = $doc->createElement('svg');
-				$newSvgElement->setAttribute('style', 'display: none');
-				$symbol = $doc->createElement('symbol');
-				$newSvgElement->appendChild($symbol);
+			//add attributes to new <symbol>
+			foreach ($oldSvgElement->attributes as $attribute) {
+				$symbol->setAttribute($attribute->name, $attribute->value);
+			}
+			foreach ($data['attributes'] as $key => $value) {
+				$symbol->setAttribute($key, $value);
+			}
 
-				//add attributes to new <symbol>
-				foreach ($oldSvgElement->attributes as $attribute) {
-					$symbol->setAttribute($attribute->name, $attribute->value);
+			//move child elements to new <symbol>
+			$children = [];
+			foreach ($oldSvgElement->childNodes as $node) {
+				if ($node->nodeType === 1) {
+					$children[] = $node;
 				}
-				foreach ($data['attributes'] as $key => $value) {
-					$symbol->setAttribute($key, $value);
-				}
+			}
+			foreach ($children as $node) {
+				$symbol->appendChild($node);
 
-				//move child elements to new <symbol>
-				$children = [];
-				foreach ($oldSvgElement->childNodes as $node) {
-					if ($node->nodeType === 1) {
-						$children[] = $node;
-					}
-				}
-				foreach ($children as $node) {
-					$symbol->appendChild($node);
+				$node->removeAttributeNS('http://www.w3.org/2000/svg', 'default');
+			}
 
-					$node->removeAttributeNS('http://www.w3.org/2000/svg', 'default');
-				}
-
-				return $doc->saveHTML($newSvgElement);
-			});
+			return $doc->saveHTML($newSvgElement);
 		};
 	}
 }

@@ -15,11 +15,6 @@ class Svg extends Component
 	public $svg;
 
 	/**
-	 * @var string The file path of the svg
-	 */
-	public $path;
-
-	/**
 	 * Create a new component instance.
 	 *
 	 * @param string $src
@@ -27,27 +22,7 @@ class Svg extends Component
 	 */
 	public function __construct(string $src)
 	{
-		$this->path = $src;
-
 		$this->svg = file_get_contents($src);
-	}
-
-	/**
-	 * Generates a unique key for the svg to be used for caching
-	 *
-	 * @param array $attributes
-	 * @return string
-	 */
-	protected function getCacheKey(array $attributes) {
-		ksort($attributes);
-
-		$cacheKey = $this->path;
-
-		foreach ($attributes as $key => $value) {
-			$cacheKey .= '#' . $key . '=' . Str::slug($value, '-');
-		}
-
-		return $cacheKey;
 	}
 
 	/**
@@ -58,20 +33,16 @@ class Svg extends Component
 	public function render()
 	{
 		return function (array $data) {
-			$cacheKey = $this->getCacheKey($data['attributes']->getAttributes());
+			$doc = new \DOMDocument();
+			$doc->loadXML($this->svg);
 
-			return Cache::remember($cacheKey, $days = config('config.cache_duration'), function() use ($data) {
-				$doc = new \DOMDocument();
-				$doc->loadXML($this->svg);
+			$element = $doc->getElementsByTagName('svg')->item(0);
 
-				$element = $doc->getElementsByTagName('svg')->item(0);
+			foreach($data['attributes'] as $key => $value) {
+				$element->setAttribute($key, $value);
+			}
 
-				foreach($data['attributes'] as $key => $value) {
-					$element->setAttribute($key, $value);
-				}
-
-				return $doc->saveHTML($element);
-			});
+			return $doc->saveHTML($element);
 		};
 	}
 }
