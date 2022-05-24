@@ -93,7 +93,7 @@ class SvgDef extends Component
 					$node->removeAttributeNS('http://www.w3.org/2000/svg', 'default');
 				}
 
-				return $doc->saveHTML($newSvgElement); //preg_replace('/(<\/|<)[a-zA-Z]+:([a-zA-Z0-9]+[ =>])/', '$1$2', $doc->saveHTML($svgElement));
+				return $doc->saveHTML($newSvgElement);
 			});
 		};
 	}
