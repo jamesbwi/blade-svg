@@ -1,4 +1,4 @@
-# Very short description of the package
+# Laravel Blade SVGs
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/jamesbwi/blade-svg.svg?style=flat-square)](https://packagist.org/packages/jamesbwi/blade-svg)
 [![Total Downloads](https://img.shields.io/packagist/dt/jamesbwi/blade-svg.svg?style=flat-square)](https://packagist.org/packages/jamesbwi/blade-svg)
